@@ -1,11 +1,11 @@
 version: 2
 jobs:
-  one:
+  one_one:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
       - checkout
-      - run: echo "A first hello"
+      - run: echo "hello"
       - run: mkdir -p my_workspace
       - run: echo "Trying out workspaces" > my_workspace/echo-output
       - persist_to_workspace:
@@ -14,7 +14,7 @@ jobs:
           # Must be relative path from root
           paths:
             - echo-output      
-  two:
+  two_two:
     docker:
       - image: circleci/ruby:2.4.1
     steps:
@@ -30,11 +30,20 @@ jobs:
           else
             echo "Nope!"; exit 1
           fi
+          
 workflows:
   version: 2
-  one_and_two:
+  build_and_deploy:
     jobs:
-      - one
-      - two:
+      - one_one:
+          filters:
+            tags:
+              only: /^v.*/
+      - two_two:
           requires:
-            - one
+            - one_one
+          filters:
+            # branches:
+            #   ignore: /.*/
+            tags:
+              only: /^v([0-9]+).([0-9]+).([0-9]+).*$/
