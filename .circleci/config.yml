@@ -42,7 +42,7 @@ jobs:
 workflows:
   version: 2
   build_and_deploy:
-    jobs:
+    jobs::thi
       - one_one:
           filters:
             tags:
@@ -51,7 +51,7 @@ workflows:
           requires:
             - one_one
           filters:
-            branches:
-              ignore: /.*/
+            # branches:
+            #   ignore: /.*/
             tags:
               only: /^v([0-9]+).([0-9]+).([0-9]+).*$/
